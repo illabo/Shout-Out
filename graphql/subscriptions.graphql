@@ -1,0 +1,169 @@
+# this is an auto generated file. This will be overwritten
+subscription OnCreateUserAccount($owner: String) {
+  onCreateUserAccount(owner: $owner) {
+    id
+    name
+    posts {
+      items {
+        id
+        textContent
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        userAccountPostsId
+        owner
+      }
+      nextToken
+      startedAt
+    }
+    following
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+subscription OnUpdateUserAccount($owner: String) {
+  onUpdateUserAccount(owner: $owner) {
+    id
+    name
+    posts {
+      items {
+        id
+        textContent
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        userAccountPostsId
+        owner
+      }
+      nextToken
+      startedAt
+    }
+    following
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+subscription OnDeleteUserAccount($owner: String) {
+  onDeleteUserAccount(owner: $owner) {
+    id
+    name
+    posts {
+      items {
+        id
+        textContent
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        userAccountPostsId
+        owner
+      }
+      nextToken
+      startedAt
+    }
+    following
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+subscription OnCreatePost($owner: String) {
+  onCreatePost(owner: $owner) {
+    id
+    textContent
+    account {
+      id
+      name
+      posts {
+        nextToken
+        startedAt
+      }
+      following
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    userAccountPostsId
+    owner
+  }
+}
+subscription OnUpdatePost($owner: String) {
+  onUpdatePost(owner: $owner) {
+    id
+    textContent
+    account {
+      id
+      name
+      posts {
+        nextToken
+        startedAt
+      }
+      following
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    userAccountPostsId
+    owner
+  }
+}
+subscription OnDeletePost($owner: String) {
+  onDeletePost(owner: $owner) {
+    id
+    textContent
+    account {
+      id
+      name
+      posts {
+        nextToken
+        startedAt
+      }
+      following
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    userAccountPostsId
+    owner
+  }
+}
