@@ -6,7 +6,9 @@
     "gqlSchemaPath": "/Users/illabo/Dev/Shout Out/amplify/backend/api/shoutout/schema.graphql",
     "defaultAuthType": {
       "mode": "API_KEY",
-      "expirationTime": 7
+      "expirationTime": 365,
+      "apiKeyExpirationDate": "2023-07-13T17:43:25.779Z",
+      "keyDescription": ""
     },
     "conflictResolution": {
       "defaultResolutionStrategy": {

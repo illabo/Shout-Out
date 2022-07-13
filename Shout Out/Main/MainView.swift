@@ -105,6 +105,6 @@ struct MainView: View {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView(viewModel: MainViewModel(user: UserModel()))
+        MainView(viewModel: MainViewModel(user: UserModel(), storage: StorageService()))
     }
 }

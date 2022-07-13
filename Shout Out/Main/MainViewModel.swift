@@ -12,8 +12,10 @@ import Foundation
 
 final class MainViewModel: ObservableObject {
     private weak var user: UserModelProtocol?
-    init(user: UserModelProtocol) {
+    private var storage: StorageServiceProtocol
+    init(user: UserModelProtocol, storage: StorageServiceProtocol) {
         self.user = user
+        self.storage = storage
         loadAccount()
     }
     
@@ -36,38 +38,30 @@ final class MainViewModel: ObservableObject {
     
     private func loadAccount() {
         guard let userId = user?.userId else { return }
-        Amplify.Hub.publisher(for: .dataStore).sink { [weak self] event in
-            if "DataStore.modelSynced" == event.eventName {
-                self?.loadAccount(userId: userId)
-            }
-        }
-        .store(in: &subscriptions)
         
-        Amplify.DataStore.start { _ in }
-    }
-    
-    private func loadAccount(userId: String) {
-        Amplify.DataStore.query(UserAccount.self, byId: userId)
+        storage.startSync()
+        
+        storage.loadAccount(userId: userId)
+            .receive(on: DispatchQueue.main)
             .sink { completion in
                 if case let .failure(error) = completion {
                     print(error)
                 }
             } receiveValue: { [weak self] account in
-                guard let account = account else {
-                    return
-                }
                 DispatchQueue.main.async {
                     self?.userAccount = account
                 }
                 guard let postsList = account.posts else { return }
-                self?.publishPosts(postsList)
+                self?.populatePostsInUI(postsList)
             }
             .store(in: &subscriptions)
+        
+        storage.startSync()
     }
     
     private func createAccount() {
         guard let id = user?.userId, let name = user?.userName else { return }
-        Amplify.DataStore.save(UserAccount(id: id, name: name))
+        storage.createAccount(userAccount: UserAccount(id: id, name: name))
             .sink { completion in
                 if case let .failure(error) = completion {
                     print(error)
@@ -75,12 +69,12 @@ final class MainViewModel: ObservableObject {
             } receiveValue: { [weak self] account in
                 self?.userAccount = account
                 guard let postsList = account.posts else { return }
-                self?.publishPosts(postsList)
+                self?.populatePostsInUI(postsList)
             }
             .store(in: &subscriptions)
     }
     
-    private func publishPosts(_ postsList: List<Post>) {
+    private func populatePostsInUI(_ postsList: List<Post>) {
         lastSeenList = postsList
         postsList
             .fetch { [weak self] result in
@@ -91,7 +85,7 @@ final class MainViewModel: ObservableObject {
                 case let .failure(error):
                     print(error)
                 case .success:
-                    
+                    // Deduplicate posts based on ID and update time.
                     var postsDictionary = [String: Post]()
                     self?.posts.forEach{
                         postsDictionary[$0.id] = $0
@@ -131,14 +125,14 @@ final class MainViewModel: ObservableObject {
         newText = ""
         // It might be better to use NTP time instead of `.now()` utilising https://github.com/MobileNativeFoundation/Kronos or other library.
         // Setting the time right away rquired for sorting the not-yet-synced posts. The Time value would be rewritten by the cloud anyway.
-        Amplify.DataStore.save(Post(textContent: post.trimmingCharacters(in: .whitespacesAndNewlines), account: userAccount, createdAt: .now()))
+        storage.createNewPost(post: Post(textContent: post.trimmingCharacters(in: .whitespacesAndNewlines), account: userAccount, createdAt: .now()))
             .sink { completion in
                 if case let .failure(error) = completion {
                     print(error)
                 }
             } receiveValue: { [weak self] post in
                 let postsList = List<Post>(elements: [post])
-                self?.publishPosts(postsList)
+                self?.populatePostsInUI(postsList)
             }
             .store(in: &subscriptions)
     }
@@ -169,7 +163,7 @@ final class MainViewModel: ObservableObject {
             }
             switch result {
             case .success(let posts):
-                self?.publishPosts(posts)
+                self?.populatePostsInUI(posts)
             case .failure(let error):
                 print(error)
             }
@@ -177,7 +171,7 @@ final class MainViewModel: ObservableObject {
     }
     
     func logoutUser() {
-        Amplify.DataStore.stop { _ in }
+        storage.stopSync()
         user?.signOut()
     }
 }

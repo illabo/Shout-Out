@@ -25,7 +25,7 @@ final class RootRouter {
         case .confirmSignUp:
             ConfirmCodeView(viewModel: ConfirmCodeViewModel(user: appState.userModel))
         case .mainView:
-            MainView(viewModel: MainViewModel(user: appState.userModel))
+            MainView(viewModel: MainViewModel(user: appState.userModel, storage: StorageService()))
         }
     }
 }
