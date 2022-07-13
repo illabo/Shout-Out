@@ -18,12 +18,12 @@ struct MainView: View {
         ZStack {
             NavigationView {
                 ScrollView {
+                    postsStack()
                     if viewModel.isLoadingPosts {
                         ProgressView()
-                    } else {
-                        postsStack()
                     }
                 }
+                .background(Color(uiColor: .systemBackground))
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button("Log out") {
@@ -91,16 +91,15 @@ struct MainView: View {
     
     @ViewBuilder
     private func postsStack() -> some View {
-        LazyVStack {
+        LazyVStack(spacing: 8) {
             ForEach(viewModel.posts.filter { $0.createdAt != nil }, id: \.id) { post in
-                VStack {
-                    PostView(text: post.textContent) {
-                        viewModel.deletePost(post)
-                    }
+                PostView(text: post.textContent) {
+                    viewModel.deletePost(post)
                 }
                 .padding()
             }
         }
+        .frame(minHeight: 0)
     }
 }
 

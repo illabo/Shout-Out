@@ -22,7 +22,7 @@ final class MainViewModel: ObservableObject {
     @Published var newText: String = ""
     @Published var isLoadingPosts: Bool = true
     private var userAccount: UserAccount?
-    private var lastPostsPage: List<Post>?
+    private var lastSeenList: List<Post>?
     var userName: String {
         user?.userName ?? ""
     }
@@ -37,7 +37,6 @@ final class MainViewModel: ObservableObject {
     private func loadAccount() {
         guard let userId = user?.userId else { return }
         Amplify.Hub.publisher(for: .dataStore).sink { [weak self] event in
-            print("AMPLIFY EVENT \(event)")
             if "DataStore.modelSynced" == event.eventName {
                 self?.loadAccount(userId: userId)
             }
@@ -54,7 +53,6 @@ final class MainViewModel: ObservableObject {
                     print(error)
                 }
             } receiveValue: { [weak self] account in
-                print("GOT ACCOUNT RESULT \(account)")
                 guard let account = account else {
                     return
                 }
@@ -83,22 +81,42 @@ final class MainViewModel: ObservableObject {
     }
     
     private func publishPosts(_ postsList: List<Post>) {
-        lastPostsPage = postsList
-        lastPostsPage?
+        lastSeenList = postsList
+        postsList
             .fetch { [weak self] result in
-                self?.isLoadingPosts = false
+                DispatchQueue.main.async {
+                    self?.isLoadingPosts = false
+                }
                 switch result {
                 case let .failure(error):
                     print(error)
                 case .success:
-                    DispatchQueue.main.async {
-                        self?.posts.append(contentsOf: self?.lastPostsPage?.elements ?? [])
-                        self?.posts.sort {
-                            if let firstCreated = $0.createdAt, let secondCreated = $1.createdAt {
-                                return firstCreated > secondCreated
-                            }
-                            return $0.id > $1.id
+                    
+                    var postsDictionary = [String: Post]()
+                    self?.posts.forEach{
+                        postsDictionary[$0.id] = $0
+                    }
+                    postsList.elements.forEach{
+                        if postsDictionary[$0.id]?.updatedAt == nil {
+                            postsDictionary[$0.id] = $0
                         }
+                        if
+                            let seenUpdatedAt = postsDictionary[$0.id]?.updatedAt,
+                            let newUpdatedAt = $0.updatedAt,
+                            seenUpdatedAt < newUpdatedAt {
+                            postsDictionary[$0.id] = $0
+                        }
+                        
+                    }
+                    DispatchQueue.main.async {
+                        self?.posts = postsDictionary
+                            .map(\.value)
+                            .sorted {
+                                if let firstCreated = $0.createdAt, let secondCreated = $1.createdAt {
+                                    return firstCreated > secondCreated
+                                }
+                                return $0.id > $1.id
+                            }
                     }
                 }
             }
@@ -112,7 +130,7 @@ final class MainViewModel: ObservableObject {
         isEditingNewPost = false
         newText = ""
         // It might be better to use NTP time instead of `.now()` utilising https://github.com/MobileNativeFoundation/Kronos or other library.
-        // Setting the time right away rquired for sorting the not-yet-sunced posts. The Time value would be rewritten by the cloud anyway.
+        // Setting the time right away rquired for sorting the not-yet-synced posts. The Time value would be rewritten by the cloud anyway.
         Amplify.DataStore.save(Post(textContent: post.trimmingCharacters(in: .whitespacesAndNewlines), account: userAccount, createdAt: .now()))
             .sink { completion in
                 if case let .failure(error) = completion {
@@ -126,23 +144,6 @@ final class MainViewModel: ObservableObject {
     }
     
     func deletePost(_ post: Post) {
-        //        Amplify.API.mutate(request: .delete(post))
-        //            .resultPublisher
-        //            .sink { completion in
-        //                if case let .failure(error) = completion {
-        //                    print(error)
-        //                }
-        //            } receiveValue: { [weak self] result in
-        //                if case let .failure(error) = result {
-        //                    print(error)
-        //                    return
-        //                }
-        //                DispatchQueue.main.async {
-        //                    self?.posts.removeAll { $0.id == post.id }
-        //                }
-        //            }
-        //            .store(in: &subscriptions)
-        
         Amplify.DataStore.delete(post){ [weak self] result in
             if case let .failure(error) = result {
                 print(error)
@@ -154,38 +155,29 @@ final class MainViewModel: ObservableObject {
         }
     }
     
+    func loadMorePosts() {
+        guard
+            let postsList = lastSeenList,
+            postsList.hasNextPage()
+        else {
+            return
+        }
+        isLoadingPosts = true
+        postsList.getNextPage{ [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoadingPosts = false
+            }
+            switch result {
+            case .success(let posts):
+                self?.publishPosts(posts)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
     func logoutUser() {
         Amplify.DataStore.stop { _ in }
         user?.signOut()
     }
 }
-
-//
-// type UserAccount
-// @model
-// @auth(
-//    rules: [
-//      { allow: owner, provider: userPools, operations: [create, update, delete] },
-//      { allow: public, provider: apiKey, operations: [read] }
-//    ]
-//  )
-// {
-//  id: ID!
-//  name: String!
-//  posts: [Post] @hasMany
-//  following: [ID]
-// }
-//
-// type Post
-// @model
-// @auth(
-//    rules: [
-//      { allow: owner, provider: userPools, operations: [create, update, delete] },
-//      { allow: public, provider: apiKey, operations: [read] }
-//    ]
-//  )
-//  {
-//  id: ID!
-//  textContent: String!
-//  account: UserAccount @belongsTo
-// }

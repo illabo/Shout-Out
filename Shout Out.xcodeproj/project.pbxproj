@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		496FD88D287C3264002CF55B /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD888287C3264002CF55B /* Post.swift */; };
 		496FD88E287C3264002CF55B /* UserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD889287C3264002CF55B /* UserAccount.swift */; };
-		496FD88F287C3264002CF55B /* AmplifyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD88A287C3264002CF55B /* AmplifyModels.swift */; };
 		496FD890287C3264002CF55B /* Post+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD88B287C3264002CF55B /* Post+Schema.swift */; };
 		496FD891287C3264002CF55B /* UserAccount+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD88C287C3264002CF55B /* UserAccount+Schema.swift */; };
 		49C5F93B2875E0B6002799CF /* View+navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C5F93A2875E0B6002799CF /* View+navigation.swift */; };
@@ -46,7 +45,6 @@
 /* Begin PBXFileReference section */
 		496FD888287C3264002CF55B /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Post.swift; path = amplify/generated/models/Post.swift; sourceTree = SOURCE_ROOT; };
 		496FD889287C3264002CF55B /* UserAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserAccount.swift; path = amplify/generated/models/UserAccount.swift; sourceTree = SOURCE_ROOT; };
-		496FD88A287C3264002CF55B /* AmplifyModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AmplifyModels.swift; path = amplify/generated/models/AmplifyModels.swift; sourceTree = SOURCE_ROOT; };
 		496FD88B287C3264002CF55B /* Post+Schema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Post+Schema.swift"; path = "amplify/generated/models/Post+Schema.swift"; sourceTree = SOURCE_ROOT; };
 		496FD88C287C3264002CF55B /* UserAccount+Schema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserAccount+Schema.swift"; path = "amplify/generated/models/UserAccount+Schema.swift"; sourceTree = SOURCE_ROOT; };
 		49C5F93A2875E0B6002799CF /* View+navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+navigation.swift"; sourceTree = "<group>"; };
@@ -113,7 +111,6 @@
 		49C5F95428789354002799CF /* AmplifyModels */ = {
 			isa = PBXGroup;
 			children = (
-				496FD88A287C3264002CF55B /* AmplifyModels.swift */,
 				496FD888287C3264002CF55B /* Post.swift */,
 				496FD88B287C3264002CF55B /* Post+Schema.swift */,
 				496FD889287C3264002CF55B /* UserAccount.swift */,
@@ -184,8 +181,8 @@
 				49F305AC286B669E0073BF7E /* Shout_OutApp.swift */,
 				49E5E22A28706F7500B13706 /* AppDelegate.swift */,
 				49F305C5286E03F30073BF7E /* ApplicationState.swift */,
-				49C5F94C28789346002799CF /* AmplifyModels.swift */,
 				49E5E22C2870727A00B13706 /* UserModel.swift */,
+				49C5F94C28789346002799CF /* AmplifyModels.swift */,
 				49F305AE286B669E0073BF7E /* ContentView.swift */,
 				49E5E2302871DF4D00B13706 /* LoadingView.swift */,
 				49E5E23B2873648F00B13706 /* Root */,
@@ -302,7 +299,6 @@
 				496FD88D287C3264002CF55B /* Post.swift in Sources */,
 				49E5E23A287360C300B13706 /* RootViewModel.swift in Sources */,
 				49C5F94428773B2F002799CF /* SignUpView.swift in Sources */,
-				496FD88F287C3264002CF55B /* AmplifyModels.swift in Sources */,
 				49C5F94028773A28002799CF /* SignUpViewModel.swift in Sources */,
 				49E5E22B28706F7500B13706 /* AppDelegate.swift in Sources */,
 				49C5F93B2875E0B6002799CF /* View+navigation.swift in Sources */,

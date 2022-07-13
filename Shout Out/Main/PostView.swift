@@ -12,28 +12,68 @@ struct PostView: View {
         self.text = text
         self.deletionHandler = deletionHandler
     }
-
+    
     private var text: String
     private var deletionHandler: (() -> Void)?
-
+    @State private var deletionRequested = false
+    
     var body: some View {
-        VStack {
-            Text(text)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-            HStack {
-                Spacer()
-                Button("Delete") {
-                    deletionHandler?()
-                }
-                .buttonStyle(.plain)
-                .foregroundColor(.red)
+        ZStack{
+            VStack {
+                postContent()
             }
-            .padding([.horizontal, .bottom])
+            if deletionRequested {
+                deleteConfirmation()
+            }
         }
         .background(Color(uiColor: .systemBackground))
         .cornerRadius(20)
         .shadow(radius: 1)
+    }
+    
+    @ViewBuilder
+    private func postContent() -> some View {
+        Text(text)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding()
+        HStack {
+            Spacer()
+            Button("Delete") {
+                deletionRequested = true
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.red)
+        }
+        .padding([.horizontal, .bottom])
+    }
+    
+    @ViewBuilder
+    private func deleteConfirmation() -> some View {
+        VStack{
+            Spacer()
+            HStack {
+                Spacer()
+                
+                Button("Cancel deleteon"){
+                    deletionRequested = false
+                }
+                .buttonStyle(.bordered)
+                .padding([.leading, .vertical])
+                
+                Button("Delete"){
+                    deletionHandler?()
+                }
+                .buttonStyle(.bordered)
+                .background(Color.red)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+                .padding([.trailing, .vertical])
+                
+                Spacer()
+            }
+            Spacer()
+        }
+        .background(Color(uiColor: .systemBackground))
     }
 }
 
