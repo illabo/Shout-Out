@@ -12,6 +12,7 @@ import Foundation
 
 protocol StorageServiceProtocol {
     func loadAccount(userId: String) -> AnyPublisher<UserAccount, Error>
+    func loadPosts(_ page: UInt) -> AnyPublisher<[Post], Error>
     func createAccount(userAccount: UserAccount) -> AnyPublisher<UserAccount, Error>
     func createNewPost(post: Post) -> AnyPublisher<Post, Error>
     func deletePost(post: Post) -> AnyPublisher<(), Error>
@@ -26,23 +27,31 @@ final class StorageService: StorageServiceProtocol {
     }
     
     private var accountPublisher = PassthroughSubject<UserAccount, Error>()
+    private var postsPublisher = PassthroughSubject<[Post], Error>()
     private var subscriptions = Set<AnyCancellable>()
+    @Published private var mayLoadPosts = false
     
     func loadAccount(userId: String) -> AnyPublisher<UserAccount, Error> {
         listenForHubUpdates(userId: userId)
+        return accountPublisher.eraseToAnyPublisher()
     }
     
-    private func listenForHubUpdates(userId: String) -> AnyPublisher<UserAccount, Error> {
+    private func listenForHubUpdates(userId: String) {
         Amplify.Hub.publisher(for: .dataStore)
             .receive(on: DispatchQueue.main)
             .sink{ [weak self] event in
-                if "DataStore.modelSynced" == event.eventName {
-                    self?.startLoadingAccount(userId: userId)
+                if let syncedEvent = event.data as? ModelSyncedEvent {
+                    switch syncedEvent.modelName {
+                    case UserAccount.modelName:
+                        self?.startLoadingAccount(userId: userId)
+                    case Post.modelName:
+                        self?.mayLoadPosts = true
+                    default:
+                        break
+                    }
                 }
             }
             .store(in: &subscriptions)
-        
-        return accountPublisher.eraseToAnyPublisher()
     }
     
     private func startLoadingAccount(userId: String) {
@@ -60,6 +69,16 @@ final class StorageService: StorageServiceProtocol {
                 }
             }
             .store(in: &subscriptions)
+    }
+    
+    func loadPosts(_ page: UInt = 0) -> AnyPublisher<[Post], Error> {
+        $mayLoadPosts
+            .first(where: { $0 })
+            .flatMap{ _ in
+                Amplify.DataStore.query(Post.self, where: Post.keys.createdAt.ne(nil), sort: .descending(Post.keys.createdAt), paginate: .page(page))
+                    .mapError{ StorageError.amplifyError($0) }
+            }
+            .eraseToAnyPublisher()
     }
     
     func createAccount(userAccount: UserAccount) -> AnyPublisher<UserAccount, Error> {

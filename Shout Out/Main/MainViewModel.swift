@@ -24,10 +24,12 @@ final class MainViewModel: ObservableObject {
     @Published var newText: String = ""
     @Published var isLoadingPosts: Bool = true
     private var userAccount: UserAccount?
-    private var lastSeenList: List<Post>?
+    private var nextPageToLoad: UInt = 0
+    //    private var lastSeenList: List<Post>?
     var userName: String {
         user?.userName ?? ""
     }
+    private var timedPostChecks: AnyCancellable?
     
     @Published var posts: [Post] = []
     var email: String {
@@ -50,70 +52,53 @@ final class MainViewModel: ObservableObject {
             } receiveValue: { [weak self] account in
                 DispatchQueue.main.async {
                     self?.userAccount = account
+                    self?.loadPosts()
                 }
-                guard let postsList = account.posts else { return }
-                self?.populatePostsInUI(postsList)
             }
             .store(in: &subscriptions)
         
         storage.startSync()
     }
     
-    private func createAccount() {
-        guard let id = user?.userId, let name = user?.userName else { return }
-        storage.createAccount(userAccount: UserAccount(id: id, name: name))
-            .sink { completion in
-                if case let .failure(error) = completion {
-                    print(error)
-                }
-            } receiveValue: { [weak self] account in
-                self?.userAccount = account
-                guard let postsList = account.posts else { return }
-                self?.populatePostsInUI(postsList)
+    private func loadPosts() {
+        self.storage.loadPosts(self.nextPageToLoad).sink { completion in
+            if case let .failure(error) = completion {
+                print(error)
             }
-            .store(in: &subscriptions)
+        } receiveValue: {
+            self.populatePostsInUI($0)
+        }
+        .store(in: &self.subscriptions)
     }
     
-    private func populatePostsInUI(_ postsList: List<Post>) {
-        lastSeenList = postsList
-        postsList
-            .fetch { [weak self] result in
-                DispatchQueue.main.async {
-                    self?.isLoadingPosts = false
+    private func populatePostsInUI(_ postsList: [Post]) {
+        DispatchQueue.main.async {
+            // Deduplicate posts based on ID and update time.
+            var postsDictionary = [String: Post]()
+            postsList.forEach{
+                postsDictionary[$0.id] = $0
+            }
+            self.posts.forEach{
+                if
+                    let seenUpdatedAt = postsDictionary[$0.id]?.updatedAt,
+                    let newUpdatedAt = $0.updatedAt,
+                    seenUpdatedAt < newUpdatedAt {
+                    postsDictionary[$0.id] = $0
                 }
-                switch result {
-                case let .failure(error):
-                    print(error)
-                case .success:
-                    // Deduplicate posts based on ID and update time.
-                    var postsDictionary = [String: Post]()
-                    self?.posts.forEach{
-                        postsDictionary[$0.id] = $0
-                    }
-                    postsList.elements.forEach{
-                        if postsDictionary[$0.id]?.updatedAt == nil {
-                            postsDictionary[$0.id] = $0
-                        }
-                        if
-                            let seenUpdatedAt = postsDictionary[$0.id]?.updatedAt,
-                            let newUpdatedAt = $0.updatedAt,
-                            seenUpdatedAt < newUpdatedAt {
-                            postsDictionary[$0.id] = $0
-                        }
-                        
-                    }
-                    DispatchQueue.main.async {
-                        self?.posts = postsDictionary
-                            .map(\.value)
-                            .sorted {
-                                if let firstCreated = $0.createdAt, let secondCreated = $1.createdAt {
-                                    return firstCreated > secondCreated
-                                }
-                                return $0.id > $1.id
-                            }
-                    }
+                if postsDictionary[$0.id] == nil {
+                    postsDictionary[$0.id] = $0
                 }
             }
+            
+            self.posts = postsDictionary
+                .map(\.value)
+                .sorted {
+                    if let firstCreated = $0.createdAt, let secondCreated = $1.createdAt {
+                        return firstCreated > secondCreated
+                    }
+                    return $0.id > $1.id
+                }
+        }
     }
     
     func submitNewPost(_ post: String) {
@@ -131,8 +116,7 @@ final class MainViewModel: ObservableObject {
                     print(error)
                 }
             } receiveValue: { [weak self] post in
-                let postsList = List<Post>(elements: [post])
-                self?.populatePostsInUI(postsList)
+                self?.populatePostsInUI([post])
             }
             .store(in: &subscriptions)
     }
@@ -150,24 +134,16 @@ final class MainViewModel: ObservableObject {
     }
     
     func loadMorePosts() {
-        guard
-            let postsList = lastSeenList,
-            postsList.hasNextPage()
-        else {
-            return
-        }
-        isLoadingPosts = true
-        postsList.getNextPage{ [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoadingPosts = false
+        storage.loadPosts(nextPageToLoad + 1)
+            .sink { completion in
+                if case let .failure(error) = completion {
+                    print(error)
+                }
+            } receiveValue: {
+                self.nextPageToLoad += 1
+                self.populatePostsInUI($0)
             }
-            switch result {
-            case .success(let posts):
-                self?.populatePostsInUI(posts)
-            case .failure(let error):
-                print(error)
-            }
-        }
+            .store(in: &subscriptions)
     }
     
     func logoutUser() {
