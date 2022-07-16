@@ -12,6 +12,7 @@
 		496FD890287C3264002CF55B /* Post+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD88B287C3264002CF55B /* Post+Schema.swift */; };
 		496FD891287C3264002CF55B /* UserAccount+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD88C287C3264002CF55B /* UserAccount+Schema.swift */; };
 		496FD8B7287F2655002CF55B /* StorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD8B6287F2655002CF55B /* StorageService.swift */; };
+		496FD8B92882C456002CF55B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD8B82882C455002CF55B /* Constants.swift */; };
 		49C5F93B2875E0B6002799CF /* View+navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C5F93A2875E0B6002799CF /* View+navigation.swift */; };
 		49C5F93D28773222002799CF /* SignInRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C5F93C28773222002799CF /* SignInRouter.swift */; };
 		49C5F94028773A28002799CF /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C5F93F28773A28002799CF /* SignUpViewModel.swift */; };
@@ -48,6 +49,7 @@
 		496FD88B287C3264002CF55B /* Post+Schema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Post+Schema.swift"; path = "amplify/generated/models/Post+Schema.swift"; sourceTree = SOURCE_ROOT; };
 		496FD88C287C3264002CF55B /* UserAccount+Schema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserAccount+Schema.swift"; path = "amplify/generated/models/UserAccount+Schema.swift"; sourceTree = SOURCE_ROOT; };
 		496FD8B6287F2655002CF55B /* StorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageService.swift; sourceTree = "<group>"; };
+		496FD8B82882C455002CF55B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		49C5F93A2875E0B6002799CF /* View+navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+navigation.swift"; sourceTree = "<group>"; };
 		49C5F93C28773222002799CF /* SignInRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInRouter.swift; sourceTree = "<group>"; };
 		49C5F93F28773A28002799CF /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 				49E5E22C2870727A00B13706 /* UserModel.swift */,
 				49C5F94C28789346002799CF /* AmplifyModels.swift */,
 				49E5E2302871DF4D00B13706 /* LoadingView.swift */,
+				496FD8B82882C455002CF55B /* Constants.swift */,
 				49E5E23B2873648F00B13706 /* Root */,
 				49E5E238287360AC00B13706 /* SignIn */,
 				49C5F9392875DE7E002799CF /* SignUp */,
@@ -302,6 +305,7 @@
 				49C5F94028773A28002799CF /* SignUpViewModel.swift in Sources */,
 				49E5E22B28706F7500B13706 /* AppDelegate.swift in Sources */,
 				49C5F93B2875E0B6002799CF /* View+navigation.swift in Sources */,
+				496FD8B92882C456002CF55B /* Constants.swift in Sources */,
 				496FD88E287C3264002CF55B /* UserAccount.swift in Sources */,
 				49F305C6286E03F30073BF7E /* ApplicationState.swift in Sources */,
 				496FD891287C3264002CF55B /* UserAccount+Schema.swift in Sources */,

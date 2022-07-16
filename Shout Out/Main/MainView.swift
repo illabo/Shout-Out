@@ -21,6 +21,9 @@ struct MainView: View {
                     postsStack()
                     if viewModel.isLoadingPosts {
                         ProgressView()
+                            .onAppear{
+                                viewModel.loadMorePosts()
+                            }
                     }
                 }
                 .background(Color(uiColor: .systemBackground))

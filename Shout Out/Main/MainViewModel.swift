@@ -24,12 +24,12 @@ final class MainViewModel: ObservableObject {
     @Published var newText: String = ""
     @Published var isLoadingPosts: Bool = true
     private var userAccount: UserAccount?
-    private var nextPageToLoad: UInt = 0
-    //    private var lastSeenList: List<Post>?
+    private var nextPageToLoad: UInt {
+        UInt(posts.count) / Constants.resultsPageSize
+    }
     var userName: String {
         user?.userName ?? ""
     }
-    private var timedPostChecks: AnyCancellable?
     
     @Published var posts: [Post] = []
     var email: String {
@@ -52,7 +52,7 @@ final class MainViewModel: ObservableObject {
             } receiveValue: { [weak self] account in
                 DispatchQueue.main.async {
                     self?.userAccount = account
-                    self?.loadPosts()
+//                    self?.loadPosts()
                 }
             }
             .store(in: &subscriptions)
@@ -72,6 +72,7 @@ final class MainViewModel: ObservableObject {
     }
     
     private func populatePostsInUI(_ postsList: [Post]) {
+        let lastLoaded = nextPageToLoad
         DispatchQueue.main.async {
             // Deduplicate posts based on ID and update time.
             var postsDictionary = [String: Post]()
@@ -98,6 +99,10 @@ final class MainViewModel: ObservableObject {
                     }
                     return $0.id > $1.id
                 }
+            
+            if lastLoaded == self.nextPageToLoad {
+                self.isLoadingPosts = false
+            }
         }
     }
     
@@ -134,13 +139,12 @@ final class MainViewModel: ObservableObject {
     }
     
     func loadMorePosts() {
-        storage.loadPosts(nextPageToLoad + 1)
+        storage.loadPosts(nextPageToLoad)
             .sink { completion in
                 if case let .failure(error) = completion {
                     print(error)
                 }
             } receiveValue: {
-                self.nextPageToLoad += 1
                 self.populatePostsInUI($0)
             }
             .store(in: &subscriptions)

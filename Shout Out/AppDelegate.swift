@@ -20,7 +20,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         do {
             try Amplify.add(plugin: AWSCognitoAuthPlugin())
             try Amplify.add(plugin: AWSAPIPlugin())
-            let datastoreConfiguration = DataStoreConfiguration.custom(syncInterval: .seconds(5), syncPageSize: 30, authModeStrategy: .multiAuth)
+            let datastoreConfiguration = DataStoreConfiguration.custom(syncInterval: Constants.amplifySyncInterval, syncPageSize: Constants.resultsPageSize, authModeStrategy: .multiAuth)
             let dataStorePlugin = AWSDataStorePlugin(
                 modelRegistration: AmplifyModels(),
                 configuration: datastoreConfiguration
