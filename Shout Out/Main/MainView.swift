@@ -60,7 +60,9 @@ struct MainView: View {
             Color.gray.opacity(0.8)
                 .ignoresSafeArea()
             
-            GeometryReader { geometry in
+            VStack {
+                Spacer()
+                
                 VStack {
                     TextEditor(text: $viewModel.newText)
                         .border(Color.gray)
@@ -83,11 +85,12 @@ struct MainView: View {
                     }
                     .padding([.bottom, .horizontal])
                 }
-                .frame(maxHeight: geometry.size.height * 0.25)
+                .frame(maxHeight: 250)
                 .background(Color(uiColor: UIColor.systemBackground))
                 .cornerRadius(20)
                 .padding()
-                .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                
+                Spacer()
             }
         }
     }
