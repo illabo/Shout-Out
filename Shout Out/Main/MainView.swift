@@ -102,10 +102,10 @@ struct MainView: View {
                 PostView(text: post.textContent) {
                     viewModel.deletePost(post)
                 }
-                .padding()
+                .padding(.horizontal)
             }
         }
-        .frame(minHeight: 0)
+        .padding(.vertical)
     }
 }
 

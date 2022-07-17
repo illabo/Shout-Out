@@ -26,7 +26,7 @@ struct PostView: View {
                 deleteConfirmation()
             }
         }
-        .background(Color(uiColor: .systemBackground))
+        .background(Color(uiColor: .secondarySystemGroupedBackground))
         .cornerRadius(20)
         .shadow(radius: 1)
     }

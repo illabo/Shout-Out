@@ -52,7 +52,6 @@ final class MainViewModel: ObservableObject {
             } receiveValue: { [weak self] account in
                 DispatchQueue.main.async {
                     self?.userAccount = account
-//                    self?.loadPosts()
                 }
             }
             .store(in: &subscriptions)
