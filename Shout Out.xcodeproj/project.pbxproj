@@ -13,6 +13,9 @@
 		496FD891287C3264002CF55B /* UserAccount+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD88C287C3264002CF55B /* UserAccount+Schema.swift */; };
 		496FD8B7287F2655002CF55B /* StorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD8B6287F2655002CF55B /* StorageService.swift */; };
 		496FD8B92882C456002CF55B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD8B82882C455002CF55B /* Constants.swift */; };
+		496FD8C128840785002CF55B /* Shout_OutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD8C028840785002CF55B /* Shout_OutTests.swift */; };
+		496FD8C828840B32002CF55B /* MockUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD8C728840B32002CF55B /* MockUserModel.swift */; };
+		496FD8CA2884107D002CF55B /* MockStorgeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FD8C92884107D002CF55B /* MockStorgeService.swift */; };
 		49C5F93B2875E0B6002799CF /* View+navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C5F93A2875E0B6002799CF /* View+navigation.swift */; };
 		49C5F93D28773222002799CF /* SignInRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C5F93C28773222002799CF /* SignInRouter.swift */; };
 		49C5F94028773A28002799CF /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C5F93F28773A28002799CF /* SignUpViewModel.swift */; };
@@ -43,6 +46,16 @@
 		49F305C6286E03F30073BF7E /* ApplicationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F305C5286E03F30073BF7E /* ApplicationState.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		496FD8C228840785002CF55B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49F305A1286B669E0073BF7E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 49F305A8286B669E0073BF7E;
+			remoteInfo = "Shout Out";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		496FD888287C3264002CF55B /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Post.swift; path = amplify/generated/models/Post.swift; sourceTree = SOURCE_ROOT; };
 		496FD889287C3264002CF55B /* UserAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserAccount.swift; path = amplify/generated/models/UserAccount.swift; sourceTree = SOURCE_ROOT; };
@@ -50,6 +63,10 @@
 		496FD88C287C3264002CF55B /* UserAccount+Schema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserAccount+Schema.swift"; path = "amplify/generated/models/UserAccount+Schema.swift"; sourceTree = SOURCE_ROOT; };
 		496FD8B6287F2655002CF55B /* StorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageService.swift; sourceTree = "<group>"; };
 		496FD8B82882C455002CF55B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		496FD8BE28840785002CF55B /* Shout OutTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Shout OutTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		496FD8C028840785002CF55B /* Shout_OutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shout_OutTests.swift; sourceTree = "<group>"; };
+		496FD8C728840B32002CF55B /* MockUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserModel.swift; sourceTree = "<group>"; };
+		496FD8C92884107D002CF55B /* MockStorgeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStorgeService.swift; sourceTree = "<group>"; };
 		49C5F93A2875E0B6002799CF /* View+navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+navigation.swift"; sourceTree = "<group>"; };
 		49C5F93C28773222002799CF /* SignInRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInRouter.swift; sourceTree = "<group>"; };
 		49C5F93F28773A28002799CF /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
@@ -78,6 +95,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		496FD8BB28840785002CF55B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		49F305A6286B669E0073BF7E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -98,6 +122,16 @@
 				496FD8B6287F2655002CF55B /* StorageService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		496FD8BF28840785002CF55B /* Shout OutTests */ = {
+			isa = PBXGroup;
+			children = (
+				496FD8C028840785002CF55B /* Shout_OutTests.swift */,
+				496FD8C728840B32002CF55B /* MockUserModel.swift */,
+				496FD8C92884107D002CF55B /* MockStorgeService.swift */,
+			);
+			path = "Shout OutTests";
 			sourceTree = "<group>";
 		};
 		49C5F9392875DE7E002799CF /* SignUp */ = {
@@ -173,6 +207,7 @@
 				49E5E23C28749E6D00B13706 /* amplifyconfiguration.json */,
 				49E5E23D28749E6D00B13706 /* awsconfiguration.json */,
 				49F305AB286B669E0073BF7E /* Shout Out */,
+				496FD8BF28840785002CF55B /* Shout OutTests */,
 				49F305AA286B669E0073BF7E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -181,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				49F305A9286B669E0073BF7E /* Shout Out.app */,
+				496FD8BE28840785002CF55B /* Shout OutTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -220,6 +256,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		496FD8BD28840785002CF55B /* Shout OutTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 496FD8C428840786002CF55B /* Build configuration list for PBXNativeTarget "Shout OutTests" */;
+			buildPhases = (
+				496FD8BA28840785002CF55B /* Sources */,
+				496FD8BB28840785002CF55B /* Frameworks */,
+				496FD8BC28840785002CF55B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				496FD8C328840785002CF55B /* PBXTargetDependency */,
+			);
+			name = "Shout OutTests";
+			productName = "Shout OutTests";
+			productReference = 496FD8BE28840785002CF55B /* Shout OutTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		49F305A8286B669E0073BF7E /* Shout Out */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 49F305B7286B669F0073BF7E /* Build configuration list for PBXNativeTarget "Shout Out" */;
@@ -253,6 +307,10 @@
 				LastSwiftUpdateCheck = 1340;
 				LastUpgradeCheck = 1340;
 				TargetAttributes = {
+					496FD8BD28840785002CF55B = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = 49F305A8286B669E0073BF7E;
+					};
 					49F305A8286B669E0073BF7E = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
@@ -275,11 +333,19 @@
 			projectRoot = "";
 			targets = (
 				49F305A8286B669E0073BF7E /* Shout Out */,
+				496FD8BD28840785002CF55B /* Shout OutTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		496FD8BC28840785002CF55B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		49F305A7286B669E0073BF7E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -294,6 +360,16 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		496FD8BA28840785002CF55B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				496FD8C828840B32002CF55B /* MockUserModel.swift in Sources */,
+				496FD8CA2884107D002CF55B /* MockStorgeService.swift in Sources */,
+				496FD8C128840785002CF55B /* Shout_OutTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		49F305A5286B669E0073BF7E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -329,7 +405,51 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		496FD8C328840785002CF55B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 49F305A8286B669E0073BF7E /* Shout Out */;
+			targetProxy = 496FD8C228840785002CF55B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		496FD8C528840786002CF55B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 96ZSYGS638;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "illabo.Shout-OutTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Shout Out.app/Shout Out";
+			};
+			name = Debug;
+		};
+		496FD8C628840786002CF55B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 96ZSYGS638;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "illabo.Shout-OutTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Shout Out.app/Shout Out";
+			};
+			name = Release;
+		};
 		49F305B5286B669F0073BF7E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -505,6 +625,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		496FD8C428840786002CF55B /* Build configuration list for PBXNativeTarget "Shout OutTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				496FD8C528840786002CF55B /* Debug */,
+				496FD8C628840786002CF55B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		49F305A4286B669E0073BF7E /* Build configuration list for PBXProject "Shout Out" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -18,78 +18,91 @@ final class MainViewModel: ObservableObject {
         self.storage = storage
         loadAccount()
     }
-    
+
     @Published var isSending: Bool = false
     @Published var isEditingNewPost: Bool = false
     @Published var newText: String = ""
     @Published var isLoadingPosts: Bool = true
+    @Published var isLoadingAccount: Bool = true
     private var userAccount: UserAccount?
     private var nextPageToLoad: UInt {
         UInt(posts.count) / Constants.resultsPageSize
     }
+
     var userName: String {
         user?.userName ?? ""
     }
-    
+
     @Published var posts: [Post] = []
     var email: String {
         user?.email ?? ""
     }
-    
+
     private var subscriptions = Set<AnyCancellable>()
-    
+
     private func loadAccount() {
         guard let userId = user?.userId else { return }
-        
+
         storage.startSync()
-        
-        storage.loadAccount(userId: userId)
+        sinkAccountPublishers(storage.loadAccount(userId: userId))
+    }
+
+    private func createAccount() {
+        guard let userId = user?.userId, let name = user?.userName else { return }
+        sinkAccountPublishers(storage.createAccount(userId: userId, name: name))
+    }
+
+    private func sinkAccountPublishers(_ accountPublisher: AnyPublisher<UserAccount, Error>) {
+        accountPublisher
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { [weak self] completion in
                 if case let .failure(error) = completion {
                     print(error)
+                }
+                if case .finished = completion, self?.userAccount == nil {
+                    self?.createAccount()
                 }
             } receiveValue: { [weak self] account in
                 DispatchQueue.main.async {
                     self?.userAccount = account
+                    self?.isLoadingAccount = false
                 }
             }
             .store(in: &subscriptions)
-        
-        storage.startSync()
     }
-    
+
     private func loadPosts() {
-        self.storage.loadPosts(self.nextPageToLoad).sink { completion in
+        storage.loadPosts(nextPageToLoad).sink { completion in
             if case let .failure(error) = completion {
                 print(error)
             }
         } receiveValue: {
             self.populatePostsInUI($0)
         }
-        .store(in: &self.subscriptions)
+        .store(in: &subscriptions)
     }
-    
+
     private func populatePostsInUI(_ postsList: [Post]) {
         let lastLoaded = nextPageToLoad
         DispatchQueue.main.async {
             // Deduplicate posts based on ID and update time.
             var postsDictionary = [String: Post]()
-            postsList.forEach{
+            postsList.forEach {
                 postsDictionary[$0.id] = $0
             }
-            self.posts.forEach{
+            self.posts.forEach {
                 if
                     let seenUpdatedAt = postsDictionary[$0.id]?.updatedAt,
                     let newUpdatedAt = $0.updatedAt,
-                    seenUpdatedAt < newUpdatedAt {
+                    seenUpdatedAt < newUpdatedAt
+                {
                     postsDictionary[$0.id] = $0
                 }
                 if postsDictionary[$0.id] == nil {
                     postsDictionary[$0.id] = $0
                 }
             }
-            
+
             self.posts = postsDictionary
                 .map(\.value)
                 .sorted {
@@ -98,13 +111,13 @@ final class MainViewModel: ObservableObject {
                     }
                     return $0.id > $1.id
                 }
-            
+
             if lastLoaded == self.nextPageToLoad {
                 self.isLoadingPosts = false
             }
         }
     }
-    
+
     func submitNewPost(_ post: String) {
         guard let userAccount = userAccount else {
             return
@@ -124,19 +137,19 @@ final class MainViewModel: ObservableObject {
             }
             .store(in: &subscriptions)
     }
-    
+
     func deletePost(_ post: Post) {
-        Amplify.DataStore.delete(post){ [weak self] result in
+        Amplify.DataStore.delete(post) { [weak self] result in
             if case let .failure(error) = result {
                 print(error)
                 return
             }
             DispatchQueue.main.async {
-                self?.posts.removeAll{ $0.id == post.id }
+                self?.posts.removeAll { $0.id == post.id }
             }
         }
     }
-    
+
     func loadMorePosts() {
         storage.loadPosts(nextPageToLoad)
             .sink { completion in
@@ -148,7 +161,7 @@ final class MainViewModel: ObservableObject {
             }
             .store(in: &subscriptions)
     }
-    
+
     func logoutUser() {
         storage.stopSync()
         user?.signOut()

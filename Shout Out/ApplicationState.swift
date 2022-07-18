@@ -59,7 +59,7 @@ final class ApplicationState {
     }
 
     private func loggedIn(_ user: AuthUser) {
-        userModel.setUserInfo(user)
+        userModel.setUserInfo(userId: user.userId, username: user.username)
         routePublisher.send(.mainView)
     }
 

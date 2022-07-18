@@ -18,7 +18,7 @@ protocol UserModelProtocol: AnyObject {
     func logIn(username: String, password: String)
     func signUp(username: String, password: String, email: String)
     func confirmSignUp(code: String)
-    func setUserInfo(_ user: AuthUser)
+    func setUserInfo(userId: String, username: String)
     func signOut()
     func wipe()
     func checkAuthSession()
@@ -128,9 +128,9 @@ final class UserModel: UserModelProtocol {
             .store(in: &subscriptions)
     }
 
-    func setUserInfo(_ user: AuthUser) {
-        userId = user.userId
-        userName = user.username
+    func setUserInfo(userId: String, username: String) {
+        self.userId = userId
+        userName = username
     }
 
     func wipe() {

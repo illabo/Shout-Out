@@ -12,13 +12,13 @@ struct PostView: View {
         self.text = text
         self.deletionHandler = deletionHandler
     }
-    
+
     private var text: String
     private var deletionHandler: (() -> Void)?
     @State private var deletionRequested = false
-    
+
     var body: some View {
-        ZStack{
+        ZStack {
             VStack {
                 postContent()
             }
@@ -30,7 +30,7 @@ struct PostView: View {
         .cornerRadius(20)
         .shadow(radius: 1)
     }
-    
+
     @ViewBuilder
     private func postContent() -> some View {
         Text(text)
@@ -46,21 +46,21 @@ struct PostView: View {
         }
         .padding([.horizontal, .bottom])
     }
-    
+
     @ViewBuilder
     private func deleteConfirmation() -> some View {
-        VStack{
+        VStack {
             Spacer()
             HStack {
                 Spacer()
-                
-                Button("Cancel deleteon"){
+
+                Button("Cancel deleteon") {
                     deletionRequested = false
                 }
                 .buttonStyle(.bordered)
                 .padding([.leading, .vertical])
-                
-                Button("Delete"){
+
+                Button("Delete") {
                     deletionHandler?()
                 }
                 .buttonStyle(.bordered)
@@ -68,7 +68,7 @@ struct PostView: View {
                 .foregroundColor(.white)
                 .cornerRadius(8)
                 .padding([.trailing, .vertical])
-                
+
                 Spacer()
             }
             Spacer()

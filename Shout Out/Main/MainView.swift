@@ -9,19 +9,19 @@ import SwiftUI
 
 struct MainView: View {
     @ObservedObject private var viewModel: MainViewModel
-    
+
     init(viewModel: MainViewModel) {
         self.viewModel = viewModel
     }
-    
+
     var body: some View {
         ZStack {
             NavigationView {
                 ScrollView {
                     postsStack()
-                    if viewModel.isLoadingPosts {
+                    if viewModel.isLoadingPosts || viewModel.isLoadingAccount {
                         ProgressView()
-                            .onAppear{
+                            .onAppear {
                                 viewModel.loadMorePosts()
                             }
                     }
@@ -41,28 +41,29 @@ struct MainView: View {
                             .onTapGesture {
                                 viewModel.isEditingNewPost.toggle()
                             }
+                            .disabled(viewModel.isLoadingAccount)
                     }
                 }
                 .navigationTitle(viewModel.userName)
                 .navigationBarTitleDisplayMode(.automatic)
                 .navigationBarHidden(false)
             }
-            
+
             if viewModel.isEditingNewPost {
                 editingInput()
             }
         }
     }
-    
+
     @ViewBuilder
     private func editingInput() -> some View {
         ZStack {
             Color.gray.opacity(0.8)
                 .ignoresSafeArea()
-            
+
             VStack {
                 Spacer()
-                
+
                 VStack {
                     TextEditor(text: $viewModel.newText)
                         .border(Color.gray)
@@ -79,7 +80,8 @@ struct MainView: View {
                             .isEmpty
                         )
                         Button("Cancel") {
-                            viewModel.isEditingNewPost.toggle()
+                            viewModel.isEditingNewPost = false
+                            viewModel.newText = "" // Do keeping the text between edits needed?
                         }
                         .buttonStyle(.bordered)
                     }
@@ -89,12 +91,12 @@ struct MainView: View {
                 .background(Color(uiColor: UIColor.systemBackground))
                 .cornerRadius(20)
                 .padding()
-                
+
                 Spacer()
             }
         }
     }
-    
+
     @ViewBuilder
     private func postsStack() -> some View {
         LazyVStack(spacing: 8) {
