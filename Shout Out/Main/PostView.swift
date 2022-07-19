@@ -54,7 +54,7 @@ struct PostView: View {
             HStack {
                 Spacer()
 
-                Button("Cancel deleteon") {
+                Button("Cancel deletion") {
                     deletionRequested = false
                 }
                 .buttonStyle(.bordered)

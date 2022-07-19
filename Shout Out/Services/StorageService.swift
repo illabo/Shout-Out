@@ -11,8 +11,8 @@ import Combine
 import Foundation
 
 protocol StorageServiceProtocol {
-    func loadAccount(userId: String) -> AnyPublisher<UserAccount, Error>
-    func createAccount(userId: String, name: String) -> AnyPublisher<UserAccount, Error>
+    func loadAccount(userId: String) -> AnyPublisher<UserAccount?, Error>
+    func createAccount(userId: String, name: String) -> AnyPublisher<UserAccount?, Error>
     func loadPosts(_ page: UInt) -> AnyPublisher<[Post], Error>
     func createNewPost(post: Post) -> AnyPublisher<Post, Error>
     func deletePost(post: Post) -> AnyPublisher<Void, Error>
@@ -25,12 +25,12 @@ final class StorageService: StorageServiceProtocol {
         case amplifyError(DataStoreError)
     }
 
-    private var accountPublisher = PassthroughSubject<UserAccount, Error>()
+    private var accountPublisher = PassthroughSubject<UserAccount?, Error>()
     private var postsPublisher = PassthroughSubject<[Post], Error>()
     private var subscriptions = Set<AnyCancellable>()
     @Published private var mayLoadPosts = false
 
-    func loadAccount(userId: String) -> AnyPublisher<UserAccount, Error> {
+    func loadAccount(userId: String) -> AnyPublisher<UserAccount?, Error> {
         listenForHubUpdates(userId: userId)
         return accountPublisher.eraseToAnyPublisher()
     }
@@ -63,16 +63,18 @@ final class StorageService: StorageServiceProtocol {
                     self?.accountPublisher.send(completion: .finished)
                 }
             } receiveValue: { [weak self] account in
-                if let account = account {
                     self?.accountPublisher.send(account)
-                }
             }
             .store(in: &subscriptions)
     }
 
-    func createAccount(userId: String, name: String) -> AnyPublisher<UserAccount, Error> {
+    func createAccount(userId: String, name: String) -> AnyPublisher<UserAccount?, Error> {
         Amplify.DataStore.save(UserAccount(id: userId, name: name))
             .mapError { StorageError.amplifyError($0) }
+            .map{ [weak self] account in
+                self?.mayLoadPosts = true
+                return account
+            }
             .eraseToAnyPublisher()
     }
 
