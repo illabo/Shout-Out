@@ -63,7 +63,7 @@ final class StorageService: StorageServiceProtocol {
                     self?.accountPublisher.send(completion: .finished)
                 }
             } receiveValue: { [weak self] account in
-                    self?.accountPublisher.send(account)
+                self?.accountPublisher.send(account)
             }
             .store(in: &subscriptions)
     }
@@ -71,7 +71,7 @@ final class StorageService: StorageServiceProtocol {
     func createAccount(userId: String, name: String) -> AnyPublisher<UserAccount?, Error> {
         Amplify.DataStore.save(UserAccount(id: userId, name: name))
             .mapError { StorageError.amplifyError($0) }
-            .map{ [weak self] account in
+            .map { [weak self] account in
                 self?.mayLoadPosts = true
                 return account
             }

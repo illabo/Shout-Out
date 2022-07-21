@@ -28,7 +28,7 @@ struct MainView: View {
                         if viewModel.posts.isEmpty {
                             Text("So empty, no posts yet")
                                 .padding()
-                            Button(action: { viewModel.loadMorePosts(force: true) }){
+                            Button(action: { viewModel.loadMorePosts(force: true) }) {
                                 Image(systemName: "arrow.triangle.2.circlepath")
                                 Text("Try reload")
                             }
